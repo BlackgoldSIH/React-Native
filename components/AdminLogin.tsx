@@ -9,13 +9,10 @@ import {
   Dimensions,
 } from "react-native";
 import ManageProjects from "./ManageProjects";
-import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
-export default function Login() {
-  const nav = useNavigation() ; 
-  
+export default function AminLogin() {
   const [currentPage, setCurrentPage] = useState(''); // Default Page
   const navigatToPage = (page:any) => {
     setCurrentPage(page);
@@ -41,7 +38,7 @@ export default function Login() {
 
       {/* Form Section */}
       <View style={styles.formSection}>
-        <Text style={styles.title}>Investigator Login</Text>
+        <Text style={styles.title}>Admin Login</Text>
         <TextInput
           style={styles.input}
           placeholder="Username or Email"
@@ -58,18 +55,12 @@ export default function Login() {
         </TouchableOpacity>
         <View style={styles.links}>
           <Text style={styles.linkText}>
-            Not a user?{" "}
-            <Text style={styles.link} onPress={() => alert("Sign Up clicked")}>
-              Sign Up
-            </Text>
-          </Text>
-          <Text style={styles.linkText}>
-            Are you an admin?{" "}
+            Are you an Investigator?{" "}
             <Text
               style={styles.link}
               onPress={() => alert("Admin Login clicked")}
             >
-              Admin Login
+              Investigator Login
             </Text>
           </Text>
         </View>

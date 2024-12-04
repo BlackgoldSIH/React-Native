@@ -1,164 +1,199 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity , ScrollView } from 'react-native';
+import SubmitRevision from './FeedbackUpload';
+ 
 
-const App = () => {
-  const data = [
-    { id: '1', title: 'Project 1', status: 'Reviewed' },
-    { id: '2', title: 'Project 2', status: 'Pending' },
-    { id: '3', title: 'Project 2', status: 'In-Review' },
-    { id: '4', title: 'Project 2', status: 'Pending' },
-    { id: '5', title: 'Project 2', status: 'Reviewed' },
-  ];
-
-  const comments = [
-    {
-      id: '1',
-      projectId: '#402235',
-      startDate: '25/3/2023',
-      endDate: '25/3/2023',
-      duration: '00:30:00',
-    },
-    {
-        id: '2',
-        projectId: '#402235',
-        startDate: '25/3/2023',
-        endDate: '25/3/2023',
+const AdminComments = () => {
+  // Dummy data with selection state
+  const [data, setData] = useState(
+    Array(4)
+      .fill(null)
+      .map((_, index) => ({
+        id: `402235-${index}`,
+        title: 'Admin comments regarding the project with ID shown below',
+        openedDays: '10 days ago',
+        startDate: '25/3/2024',
+        endDate: '25/3/2024',
         duration: '00:30:00',
-      },
-      // Add more items here as needed
-    ];
-  
-    const renderSubmission = ({ item }) => (
-      <View style={styles.submissionItem}>
-        <Text style={styles.projectTitle}>{item.title}</Text>
-        <Text style={[styles.status, getStatusStyle(item.status)]}>{item.status}</Text>
-      </View>
-    );
-  
-    const renderComment = ({ item }) => (
-      <View style={styles.commentItem}>
-        <Text style={styles.commentText}>
-          Admin comments regarding the project with ID shown below {item.projectId}
-        </Text>
-        <Text style={styles.commentText}>Start Date: {item.startDate}</Text>
-        <Text style={styles.commentText}>End Date: {item.endDate}</Text>
-        <Text style={styles.commentText}>Duration: {item.duration}</Text>
-      </View>
-    );
-    const getStatusStyle = (status) => {
-        switch (status) {
-          case 'Reviewed':
-            return { color: 'green' };
-          case 'Pending':
-            return { color: 'red' };
-          case 'In-Review':
-            return { color: 'orange' };
-          default:
-            return { color: 'black' };
-        }
-      };
-    
-      return (
-        <View style={styles.container}>
-          {/* Submit Revision Section */}
-          <View style={styles.submitSection}>
-            <Text style={styles.sectionTitle}>Submit Revision</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Write your response..."
-              multiline
-            />
-  <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
+        isSelected: false,
+      }))
+  );
 
-      {/* Submission History */}
-      <Text style={styles.sectionTitle}>Submission History</Text>
+  const toggleCheckbox = (id) => {
+    const updatedData = data.map((item) =>
+      item.id === id ? { ...item, isSelected: !item.isSelected } : item
+    );
+    setData(updatedData);
+  };
+
+  const renderItem = ({ item }) => (
+
+    <View style={styles.card}>
+      {/* Checkbox */}
+      <TouchableOpacity
+        style={styles.checkboxContainer}
+        onPress={() => toggleCheckbox(item.id)}
+      >
+        <View style={[styles.checkbox, item.isSelected && styles.checkboxSelected]}>
+          {item.isSelected && <Text style={styles.tickMark}>✓</Text>}
+        </View>
+      </TouchableOpacity>
+
+      {/* Main Content */}
+      <View style={{ flex: 1 }}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.subText}>
+          <Text style={styles.link}>#{item.id}</Text> Opened {item.openedDays} by Admin
+        </Text>
+        <View style={styles.infoRow}>
+          <View style={styles.statusContainer}>
+            <Text style={styles.statusCanceled}>Canceled</Text>
+            <Text style={styles.statusCompleted}>Completed</Text>
+          </View>
+          <View style={styles.dateContainer}>
+            <View style={styles.dateItem}>
+              <Text style={styles.dateLabel}>Start Date</Text>
+              <Text style={styles.dateValue}>{item.startDate}</Text>
+            </View>
+            <View style={styles.dateItem}>
+              <Text style={styles.dateLabel}>End Date</Text>
+              <Text style={styles.dateValue}>{item.endDate}</Text>
+            </View>
+          </View>
+          <View style={styles.durationContainer}>
+            <Text style={styles.durationText}>{item.duration}</Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+
+  return (
+    <ScrollView>
+    <View style={styles.container}>
+      <View><Text style={{marginTop:5 , marginBottom:5  , fontWeight:"400" , fontSize:15 , marginRight:3}}>Admin Comments {'>'}</Text></View>
       <FlatList
         data={data}
-        renderItem={renderSubmission}
         keyExtractor={(item) => item.id}
-        style={styles.list}
+        renderItem={renderItem}
       />
-
-      {/* Admin Comments */}
-      <Text style={styles.sectionTitle}>Admin Comments</Text>
-      <FlatList
-        data={comments}
-        renderItem={renderComment}
-        keyExtractor={(item) => item.id}
-        style={styles.list}
-      />
- </View>
+     
+    </View>
+    <View>
+      <SubmitRevision />
+    </View>
+    </ScrollView>
+    
+    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: '#f9f9f9',
     padding: 16,
   },
-  submitSection: {
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 8,
+  card: {
+    flexDirection: 'row',
     backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 12,
     borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  checkboxContainer: {
+    marginRight: 12,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonText: {
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxSelected: {
+    backgroundColor: '#007bff',
+    borderColor: '#007bff',
+  },
+  tickMark: {
     color: '#fff',
+    fontSize: 14,
     fontWeight: 'bold',
   },
-  list: {
-    marginBottom: 16,
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
   },
-  submissionItem: {
+  subText: {
+    marginTop: 4,
+    fontSize: 14,
+    color: '#666',
+  },
+  link: {
+    color: '#007bff',
+  },
+  infoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-},
-projectTitle: {
-  fontSize: 16,
-  fontWeight: 'bold',
-},
-status: {
-  fontSize: 16,
-  fontWeight: 'bold',
-},
-commentItem: {
-  padding: 8,
-  backgroundColor: '#fff',
-  borderRadius: 8,
-  marginBottom: 8,
-  borderWidth: 1,
-  borderColor: '#ddd',
-},
-commentText: {
-  fontSize: 14,
-  marginBottom: 4,
-},
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  statusContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  statusCanceled: {
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    fontSize: 12,
+    marginRight: 8,
+  },
+  statusCompleted: {
+    backgroundColor: '#d4edda',
+    color: '#155724',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    fontSize: 12,
+  },
+  dateContainer: {
+    flex: 2,
+    flexDirection:"row", 
+    gap:10 , 
+  },
+  dateItem: {
+    marginBottom: 4,
+  },
+  dateLabel: {
+    fontSize: 12,
+    color: '#666',
+  },
+  dateValue: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  durationContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  durationText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#28a745',
+  },
 });
 
-export default App;      
+export default AdminComments;

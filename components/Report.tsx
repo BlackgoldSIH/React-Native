@@ -1,167 +1,204 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
-  FlatList,
-  TouchableOpacity,
   StyleSheet,
-  ScrollView,
-} from 'react-native';
-import  Icon  from '@expo/vector-icons/MaterialIcons'; 
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  Picker,
+  Dimensions, // Dropdown-like component
+} from "react-native";
 
-const SubmittedReports = () => {
-  const [currentPage, setCurrentPage] = useState(1); // Pagination state
-  const reportsPerPage = 5;
+const App = () => {
 
-  // Sample data for reports
-  const reportsData = [
-    {
-      id: 1,
-      title: 'Report Title',
-      start: '30 min ago',
-      end: '15 Jan 2025',
-      status: 'Pending',
-    },
-    {
-      id: 2,
-      title: 'Report Title 2',
-      start: '2 days ago',
-      end: '20 Dec 2024',
-      status: 'In Review',
-    },
-    {
-      id: 3,
-      title: 'Report Title 4',
-      start: '08 Aug 2024',
-      end: '21 Nov 2024',
-      status: 'Approved',
-    },
-    {
-      id: 4,
-      title: 'Report Title 5',
-      start: '08 Aug 2024',
-      end: '21 Nov 2024',
-      status: 'Declined',
-    },
-    {
-      id: 5,
-      title: 'Report Title 6',
-      start: '08 Aug 2024',
-      end: '21 Nov 2024',
-      status: 'Approved',
-    },
-    {
-      id: 6,
-      title: 'Report Title 7',
-      start: '08 Aug 2024',
-      end: '21 Nov 2024',
-      status: 'Deadline Today',
-    },
-    // Add more reports as needed
+    const files = [
+        { id: "1", name: "Project 1.pdf", size: "25 MB", modified: "2025/12/16", permission: "Investigator", color: "#4CAF50" },
+        { id: "2", name: "Invoice Nov 17.doc", size: "16 MB", modified: "2025/12/16", permission: "View Only", color: "#FFC107" },
+        { id: "3", name: "Screenshot 22.jpg", size: "155 KB", modified: "2025/12/16", permission: "Investigator", color: "#4CAF50" },
+        { id: "4", name: "abc.txt", size: "157 KB", modified: "2025/12/16", permission: "Admin", color: "#F44336" },
+        { id: "5", name: "Landing Page.html", size: "197 KB", modified: "2025/12/16", permission: "Admin", color: "#F44336" },
+        { id: "6", name: "Styles.css", size: "1 GB", modified: "2025/12/16", permission: "Investigator", color: "#4CAF50" },
+        { id: "7", name: "CheatSheet.txt", size: "889 KB", modified: "2025/12/16", permission: "View Only", color: "#FFC107" },
+      ];
+    
+      const renderFileItem = ({ item }) => (
+        <View style={styles.fileRow}>
+          <View style={styles.fileInfo}>
+            <Text style={styles.fileName}>{item.name}</Text>
+            <Text style={styles.fileSize}>{item.size}</Text>
+          </View>
+          <Text style={styles.fileModified}>{item.modified}</Text>
+          <View style={[styles.permissionBadge, { backgroundColor: item.color }]}>
+            <Text style={styles.permissionText}>{item.permission}</Text>
+          </View>
+          <TouchableOpacity style={styles.actionsButton}>
+            <Text style={styles.actionsText}>⋮</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    
+
+    const forms = [
+        { id: "1", title: "Form 1", status: "Completed", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", download: "Download" },
+        { id: "2", title: "Form 1", status: "Completed", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", download: "Download" },
+        { id: "3", title: "Form 1", status: "Completed", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", download: "Download" },
+        { id: "4", title: "Form 1", status: "Completed", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", download: "Download" },
+      ];
+    
+      const renderIte = ({ item }) => (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          <View style={styles.statusContainer}>
+            <Text style={styles.status}>{item.status}</Text>
+          </View>
+          <Text style={styles.description}>{item.description}</Text>
+          <TouchableOpacity>
+            <Text style={styles.downloadLink}>{item.download}</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    
+    
+
+    const data = [
+        { id: '1', title: 'Report Title', startDate: '30 min ago', endDate: '15 Jan 2025', status: 'Pending', statusColor: '#FFC107' },
+        { id: '2', title: 'Report Title 2', startDate: '2 days ago', endDate: '20 Dec 2024', status: 'In Review', statusColor: '#00BCD4' },
+        { id: '3', title: 'Report Title 3', startDate: '1 week ago', endDate: '1 Dec 2024', status: 'Discarded', statusColor: '#F44336' },
+        { id: '4', title: 'Report Title 4', startDate: '08 Aug 2024', endDate: '21 Nov 2024', status: 'Approved', statusColor: '#4CAF50' },
+        { id: '5', title: 'Report Title 5', startDate: '30 Jul 2024', endDate: 'Deadline Today', status: 'Approved', statusColor: '#4CAF50' },
+      ];
+    
+      const renderItem = ({ item }) => (
+        <View style={styles.row}>
+          <Text style={styles.cell}>{item.title}</Text>
+          <Text style={styles.cell}>{item.startDate}</Text>
+          <Text style={styles.cell}>{item.endDate}</Text>
+          <View style={[styles.statusBadge, { backgroundColor: item.statusColor }]}>
+            <Text style={styles.statusText}>{item.status}</Text>
+          </View>
+          <View style={styles.actions}>
+            <TouchableOpacity style={styles.iconButton}>
+              <Text style={styles.iconText}>👁</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <Text style={styles.iconText}>🗑</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    
+    
+  const [selectedPage, setSelectedPage] = useState("Document Repository");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const dummyReports = [
+    { title: "Report 1", status: "Pending" },
+    { title: "Report 2", status: "In Review" },
+    { title: "Report 3", status: "Approved" },
   ];
 
-  // Pagination logic
-  const totalPages = Math.ceil(reportsData.length / reportsPerPage);
-  const startIndex = (currentPage - 1) * reportsPerPage;
-  const endIndex = startIndex + reportsPerPage;
-  const currentReports = reportsData.slice(startIndex, endIndex);
+  const handleFileUpload = () => {
+    Alert.alert(
+      "File Upload",
+      "Simulated file upload action.",
+      [
+        {
+          text: "Upload",
+          onPress: () => {
+            const newFile = {
+              name: `File_${uploadedFiles.length + 1}.txt`,
+              size: `${(Math.random() * 100).toFixed(2)} KB`,
+            };
+            setUploadedFiles([...uploadedFiles, newFile]);
+          },
+        },
+        { text: "Cancel", style: "cancel" },
+      ],
+      { cancelable: true }
+    );
+  };
 
-  const getStatusStyle = (status) => {
-    switch (status) {
-      case 'Pending':
-        return styles.statusPending;
-      case 'In Review':
-        return styles.statusInReview;
-      case 'Approved':
-        return styles.statusApproved;
-      case 'Declined':
-        return styles.statusDeclined;
-      case 'Deadline Today':
-        return styles.statusDeadlineToday;
+  const renderPageContent = () => {
+    switch (selectedPage) {
+      case "Submitted Reports":
+        return (
+            <View style={styles.container}>
+            <Text style={styles.title}>Submitted Reports</Text>
+            <FlatList
+              data={data}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+              ListHeaderComponent={() => (
+                <View style={styles.headerRow}>
+                  <Text style={styles.headerCell}>Title</Text>
+                  <Text style={styles.headerCell}>Start Date</Text>
+                  <Text style={styles.headerCell}>End Date (Expected)</Text>
+                  <Text style={styles.headerCell}>Status</Text>
+                  <Text style={styles.headerCell}>Action</Text>
+                </View>
+              )}
+            />
+          </View>
+        );
+      case "Document Repository":
+        return (
+            <View style={styles.container}>
+            <Text style={styles.title}>Public Files (81 Total)</Text>
+            <FlatList
+              data={files}
+              keyExtractor={(item) => item.id}
+              renderItem={renderFileItem}
+              contentContainerStyle={styles.fileList}
+            />
+            <View style={styles.detailsPanel}>
+              <Text style={styles.detailsTitle}>File Details</Text>
+              <Text style={styles.detailsText}>accounts.txt</Text>
+              <Text style={styles.detailsText}>Modified: 24/10/2024</Text>
+      
+              <Text style={styles.detailsTitle}>File Overview</Text>
+              <Text style={styles.detailsText}>Total Reviews: 198</Text>
+              <Text style={styles.detailsText}>Responses: 16</Text>
+              <Text style={styles.detailsText}>Comments: 11</Text>
+              <Text style={styles.detailsText}>Reapplied: 87</Text>
+              <Text style={styles.detailsText}>Delete: 2</Text>
+            </View>
+          </View>
+      
+        );
+      case "Required Forms":
+        return (
+            <View style={styles.container}>
+            <Text style={styles.title}>Required Forms</Text>
+            <FlatList
+              data={forms}
+              keyExtractor={(item) => item.id}
+              renderItem={renderIte}
+              numColumns={2} // Creates a grid with 2 columns
+              contentContainerStyle={styles.grid}
+            />
+          </View>
+      
+        );
       default:
-        return styles.statusDefault;
+        return <Text>Page not found!</Text>;
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Submitted Reports</Text>
-        <TouchableOpacity style={styles.filterButton}>
-          <Icon name="filter-list" size={20} color="#555" />
-        </TouchableOpacity>
-      </View>
+      {/* Dropdown Navigation */}
+      <Picker
+        selectedValue={selectedPage}
+        style={styles.dropdown}
+        onValueChange={(itemValue) => setSelectedPage(itemValue)}
+      >
+        <Picker.Item label="Document Repository" value="Document Repository" />
+        <Picker.Item label="Submitted Reports" value="Submitted Reports" />
+        <Picker.Item label="Required Forms" value="Required Forms" />
+      </Picker>
 
-      {/* Table Headers */}
-      <View style={styles.tableHeader}>
-        <Text style={styles.tableHeaderText}>Title</Text>
-        <Text style={styles.tableHeaderText}>Start</Text>
-        <Text style={styles.tableHeaderText}>End (Expected)</Text>
-        <Text style={styles.tableHeaderText}>Status</Text>
-        <Text style={styles.tableHeaderText}>Action</Text>
-      </View>
-
-      {/* List of Reports */}
-      <FlatList
-        data={currentReports}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.reportRow}>
-            <Text style={styles.reportText}>{item.title}</Text>
-            <Text style={styles.reportText}>{item.start}</Text>
-            <Text style={styles.reportText}>{item.end}</Text>
-            <View style={getStatusStyle(item.status)}>
-              <Text style={styles.statusText}>{item.status}</Text>
-            </View>
-            <View style={styles.actionIcons}>
-              <TouchableOpacity style={styles.iconButton}>
-                <Icon name="visibility" size={20} color="#4caf50" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton}>
-                <Icon name="delete" size={20} color="#f44336" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
-
-      {/* Pagination */}
-      <View style={styles.pagination}>
-        <TouchableOpacity
-          disabled={currentPage === 1}
-          onPress={() => setCurrentPage(currentPage - 1)}
-          style={styles.pageButton}
-        >
-          <Text style={styles.pageButtonText}>{'<'}</Text>
-        </TouchableOpacity>
-        {[...Array(totalPages)].map((_, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => setCurrentPage(index + 1)}
-            style={[
-              styles.pageButton,
-              currentPage === index + 1 && styles.activePageButton,
-            ]}
-          >
-            <Text
-              style={[
-                styles.pageButtonText,
-                currentPage === index + 1 && styles.activePageButtonText,
-              ]}
-            >
-              {index + 1}
-            </Text>
-          </TouchableOpacity>
-        ))}
-        <TouchableOpacity
-          disabled={currentPage === totalPages}
-          onPress={() => setCurrentPage(currentPage + 1)}
-          style={styles.pageButton}
-        >
-          <Text style={styles.pageButtonText}>{'>'}</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Page Content */}
+      <View style={styles.pageContent}>{renderPageContent()}</View>
     </View>
   );
 };
@@ -169,108 +206,237 @@ const SubmittedReports = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#f9f9f9',
+    marginLeft:15 , 
+    backgroundColor: "#ffffff",
   },
-  header: {
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  headerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: '#e0e0e0',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 6,
     marginBottom: 10,
   },
-  headerText: {
+  grid: {
+    justifyContent: "space-between",
+  },
+  card: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+    padding: 16,
+    margin: 8,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+    maxWidth: Dimensions.get("window").width / 2 - 24, // Ensures two columns
+  },
+  fileList: {
+    flex: 3,
+    paddingHorizontal: 16,
+  },
+  fileRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    marginBottom: 8,
+    padding: 16,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  fileInfo: {
+    flex: 2,
+  },
+  fileName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  fileSize: {
+    fontSize: 12,
+    color: "#757575",
+  },
+  fileModified: {
+    flex: 1,
+    fontSize: 14,
+    textAlign: "center",
+  },
+  permissionBadge: {
+    flex: 1,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  permissionText: {
+    color: "#ffffff",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  actionsButton: {
+    flex: 0.5,
+    alignItems: "center",
+  },
+  actionsText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "#757575",
   },
-  filterButton: {
-    padding: 5,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    backgroundColor: '#eee',
-    borderRadius: 5,
-  },
-  tableHeaderText: {
-    fontWeight: 'bold',
-    fontSize: 12,
+  detailsPanel: {
     flex: 1,
-    textAlign: 'center',
+    backgroundColor: "#ffffff",
+    padding: 16,
+    borderLeftWidth: 1,
+    borderLeftColor: "#e0e0e0",
   },
-  reportRow: {
+  detailsTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  detailsText: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  statusContainer: {
+    backgroundColor: "#E8F5E9",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    alignSelf: "flex-start",
+    marginBottom: 8,
+  },
+  status: {
+    color: "#4CAF50",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  description: {
+    fontSize: 14,
+    color: "#757575",
+    marginBottom: 12,
+  },
+  downloadLink: {
+    color: "#F44336",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+
+  headerCell: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  row: {
     flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginBottom: 10,
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
   },
-  reportText: {
+  cell: {
     flex: 1,
-    fontSize: 12,
-    textAlign: 'center',
+    fontSize: 14,
+  },
+  statusBadge: {
+    flex: 1,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   statusText: {
     color: '#fff',
-    fontSize: 10,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
-  actionIcons: {
+  actions: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 0.5,
   },
   iconButton: {
-    padding: 5,
+    marginHorizontal: 4,
   },
-  pagination: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10,
+  iconText: {
+    fontSize: 16,
   },
-  pageButton: {
-    padding: 10,
-    margin: 5,
-    borderRadius: 5,
-    backgroundColor: '#ddd',
+
+  dropdown: {
+    height: 35,
+    borderRadius:9 , 
+    width: "25%",
+    borderColor: "#007AFF",
+    borderWidth: 1,
+    backgroundColor: "#F9F9F9",
+    marginVertical: 10,
   },
-  pageButtonText: {
+  pageContent: {
+    flex: 1,
+    padding: 15,
+  },
+  pageContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  uploadButton: {
+    width: "90%",
+    backgroundColor: "#007AFF",
+    paddingVertical: 12,
+    alignItems: "center",
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  uploadButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  fileName: {
     fontSize: 14,
+    color: "#4B4B4B",
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    borderRadius: 6,
+    width: "100%",
   },
-  activePageButton: {
-    backgroundColor: '#007bff',
+  reportItem: {
+    padding: 15,
+    backgroundColor: "#E8E8E8",
+    marginBottom: 10,
+    borderRadius: 8,
   },
-  activePageButtonText: {
-    color: '#fff',
+  reportTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
-  statusPending: {
-    backgroundColor: '#ffc107',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  statusInReview: {
-    backgroundColor: '#17a2b8',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  statusApproved: {
-    backgroundColor: '#28a745',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  statusDeclined: {
-    backgroundColor: '#dc3545',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  statusDeadlineToday: {
-    backgroundColor: '#f44336',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+  formText: {
+    fontSize: 16,
+    color: "#333",
   },
 });
 
-export default SubmittedReports;
+export default App;

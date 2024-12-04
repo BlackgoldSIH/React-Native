@@ -280,17 +280,22 @@ import LoginPage from '@/components/Login';
 import HelpPage from '@/components/Help';
 import SecurityPage from '@/components/Security';
 import SettingsPage from '@/components/Settings';
+import ProjectCard from '@/components/ProjectCard';
+import ProjectCards from '@/components/ProjectCard';
+import Tools from '@/components/Tools';
+import Login from '@/components/Login';
 
 const { width } = Dimensions.get('window');
 
 const App = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const drawerAnimation = useRef(new Animated.Value(-width * 0.8)).current;
 
   // Current Page State
-  const [currentPage, setCurrentPage] = useState('Manage Projects'); // Default Page
+  const [currentPage, setCurrentPage] = useState('login'); // Default Page
 
   const toggleDrawer = () => {
+    
     if (isDrawerOpen) {
       Animated.timing(drawerAnimation, {
         toValue: -width * 0.8,
@@ -320,7 +325,12 @@ const App = () => {
   const renderContent = () => {
     switch (currentPage) {
       case 'Manage Projects':
-        return <ManageProjects />;
+        return ( 
+          <View style={styles.container}>
+            <ProjectCards />
+     </View>
+      
+        )
       case 'Chat':
         return <Chat />;
       case 'Track Finance':
@@ -343,8 +353,10 @@ const App = () => {
         return <SecurityPage />;
         case 'settings':
         return <SettingsPage />;
+        case 'tools':
+        return <Tools />;
       default:
-        return <ManageProjects />;
+        return <LoginPage />;
     }
   };
 
@@ -361,7 +373,11 @@ const App = () => {
       <Animated.View
         style={[styles.drawer, { transform: [{ translateX: drawerAnimation }] }]}
       >
-        <Text style={styles.drawerHeader}>BLACKGOLD</Text>
+        <Image
+            source={require("../../components/logo.png")} // Replace with your logo path
+            style={styles.logo}
+            resizeMode="contain"
+          />
         <ScrollView>
           <SidebarItem
             icon="dashboard"
@@ -420,6 +436,11 @@ const App = () => {
             onPress={() => navigateToPage('security')}
           />
           <SidebarItem
+            icon="tools"
+            title="Tools"
+            onPress={() => navigateToPage('tools')}
+          />
+          <SidebarItem
             icon="settings"
             title="Settings"
             onPress={() => navigateToPage('settings')}
@@ -433,6 +454,7 @@ const App = () => {
       <View style={styles.navbar}>
         <View style={{flexDirection:"row"}}>
         <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
+          
           <Text style={styles.menuButtonText}>☰</Text>
          </TouchableOpacity>
          
@@ -444,6 +466,9 @@ const App = () => {
          </TouchableOpacity>
          <TouchableOpacity onPress={() => alert('Profile')} style={styles.navbarIcon}>
            <FontAwesome name="user" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => alert('Profile')} style={styles.navbarIcon}>
+           <FontAwesome name="envelope" size={24} color="black" />
         </TouchableOpacity>
          <View style={styles.profile}>
              <Text style={styles.profileName}>Pavan Shimpi</Text>
@@ -505,17 +530,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f7f7f7',
   },
+  logo: {
+    width: "14%",
+    height: "7%",
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1,
   },
+  
   drawer: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: width * 0.8,
+    width: width * 0.8 ,
     backgroundColor: '#464655',
     padding: 20,
     zIndex: 2,
@@ -571,7 +601,7 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     zIndex: 0,
-    marginTop: 60,
+    marginTop: -3,
   },
   page: {
     flex: 1,

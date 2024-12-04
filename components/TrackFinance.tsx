@@ -1,238 +1,117 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import Svg, { Path, Circle } from 'react-native-svg';
+import TrackFinanceCharts from './TrackFinanceBarandDonuts';
+import ExpectedTimeline from './ExpectedTimeline';
 
-const TrackFinance = () => {
-  const screenWidth = Dimensions.get('window').width;
-
-  // Dummy data
-  const summary = {
-    income: 8000,
-    expenses: 4500,
-    savings: 3500,
-  };
-
-  const lineChartData = [1000, 2000, 3000, 4000, 6000, 8000];
-
-  const categories = [
-    { name: 'Food', amount: 1500, color: '#FF6F61' },
-    { name: 'Transport', amount: 800, color: '#4CAF50' },
-    { name: 'Shopping', amount: 1200, color: '#2196F3' },
-    { name: 'Entertainment', amount: 1000, color: '#FFC107' },
-  ];
-
-  const transactions = [
-    { id: 1, name: 'Grocery', amount: -50, date: '01 Dec 2024' },
-    { id: 2, name: 'Salary', amount: 8000, date: '30 Nov 2024' },
-    { id: 3, name: 'Taxi', amount: -20, date: '29 Nov 2024' },
-    { id: 4, name: 'Dining Out', amount: -60, date: '28 Nov 2024' },
-  ];
-
+const StatsCard = ({ title, value, change, color, graphPath, dotColor }:any) => {
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Track Finance</Text>
-
-      {/* Summary Cards */}
-      <View style={styles.summaryContainer}>
-        <View style={[styles.card, { backgroundColor: '#e8f5e9' }]}>
-          <Text style={styles.cardLabel}>Income</Text>
-          <Text style={styles.cardValue}>${summary.income}</Text>
-        </View>
-        <View style={[styles.card, { backgroundColor: '#ffebee' }]}>
-          <Text style={styles.cardLabel}>Expenses</Text>
-          <Text style={styles.cardValue}>${summary.expenses}</Text>
-        </View>
-        <View style={[styles.card, { backgroundColor: '#e3f2fd' }]}>
-          <Text style={styles.cardLabel}>Savings</Text>
-          <Text style={styles.cardValue}>${summary.savings}</Text>
-        </View>
-      </View>
-
-      {/* Line Chart */}
-      <Text style={styles.sectionTitle}>Income Trend</Text>
-      <View style={styles.lineChart}>
-        {lineChartData.map((value, index) => {
-          const height = (value / Math.max(...lineChartData)) * 150;
-          return (
-            <View
-              key={index}
-              style={[styles.lineChartPoint, { bottom: height }]}
-            />
-          );
-        })}
-        <View style={styles.lineConnector}>
-          {lineChartData.map((value, index) => {
-            if (index < lineChartData.length - 1) {
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.line,
-                    {
-                      height: 2,
-                      left: index * (screenWidth / lineChartData.length),
-                    },
-                  ]}
-                />
-              );
-            }
-          })}
-        </View>
-      </View>
-
-      {/* Category Breakdown */}
-      <Text style={styles.sectionTitle}>Expenses by Category</Text>
-      {categories.map((category, index) => (
-        <View style={styles.categoryRow} key={index}>
-          <View
-            style={[styles.categoryColor, { backgroundColor: category.color }]}
-          />
-          <Text style={styles.categoryText}>{category.name}</Text>
-          <Text style={styles.categoryAmount}>${category.amount}</Text>
-        </View>
-      ))}
-
-      {/* Transaction History */}
-      <Text style={styles.sectionTitle}>Recent Transactions</Text>
-      {transactions.map((transaction) => (
-        <View style={styles.transactionRow} key={transaction.id}>
-          <Text style={styles.transactionName}>{transaction.name}</Text>
-          <Text
-            style={[
-              styles.transactionAmount,
-              {
-                color: transaction.amount < 0 ? '#f44336' : '#4caf50',
-              },
-            ]}
-          >
-            ${transaction.amount}
-          </Text>
-          <Text style={styles.transactionDate}>{transaction.date}</Text>
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.card}>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.value}>{value}</Text>
+      <Text style={[styles.change, { color }]}>
+        &#8599; {change} from last month
+      </Text>
+      <Svg height="50" width="100" style={styles.graph}>
+        <Path d={graphPath} stroke={color} strokeWidth="2" fill="none" />
+        <Circle cx="90" cy="25" r="4" fill={dotColor} />
+      </Svg>
+    </View>
   );
 };
 
+const App = () => {
+  return (
+     <>
+     <ExpectedTimeline />
+    <View style={styles.container}>
+      <StatsCard
+        title="Total Projects"
+        value="500"
+        change="+2.5"
+        color="#90EE90"
+        dotColor="#90EE90"
+        graphPath="M10 30 Q 30 10, 50 20 T 90 25"
+      />
+      <StatsCard
+        title="Total Spending"
+        value="₹36,672"
+        change="+3.5"
+        color="#FFB6C1"
+        dotColor="#FFB6C1"
+        graphPath="M10 40 Q 30 20, 50 30 T 90 20"
+      />
+      <StatsCard
+        title="To Achieve"
+        value="₹291,912"
+        change="+4.5"
+        color="#FFD700"
+        dotColor="#FFD700"
+        graphPath="M10 35 Q 30 25, 50 30 T 90 30"
+      />
+      
+    </View>
+    <View style = { styles.container2}>
+    <TrackFinanceCharts />
+    </View>
+    </>
+  );
+};
+
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-    color: '#333',
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  card: {
-    flex: 1,
-    padding: 15,
-    borderRadius: 8,
-    marginHorizontal: 5,
+    // flex: 1,
+    // backgroundColor: '#fff',
+    // justifyContent: 'space-around',
+    gap:5 , 
+    marginLeft:5 , 
     alignItems: 'center',
-    elevation: 2,
+    paddingVertical: 20, 
+    display:"flex" , 
+    flexDirection:"row" ,
   },
-  cardLabel: {
-    fontSize: 14,
-    color: '#555',
+  container2:{ 
+ // flex: 1,
+ width:"50%" , 
+ borderRadius:19 , 
+ // justifyContent: 'space-around',
+ gap:5 , 
+ marginLeft:5 , 
+ marginTop:5 , 
+ alignItems: 'center',
+ paddingVertical: 20, 
+ display:"flex" , 
+ flexDirection:"row" ,
+  }, 
+  card: {
+    backgroundColor: '#2D2D3C',
+    borderRadius: 15, 
+    width: '25%',
+    padding: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  cardValue: {
-    fontSize: 18,
+  title: {
+    color: '#AAA',
+    fontSize: 16,
+    marginBottom: 5,
+    fontWeight: '500',
+  },
+  value: {
+    color: '#FFF',
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+  },
+  change: {
+    fontSize: 14,
     marginTop: 5,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  lineChart: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    height: 200,
-    marginBottom: 20,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    position: 'relative',
-  },
-  lineChartPoint: {
-    width: 8,
-    height: 8,
-    backgroundColor: '#4CAF50',
-    borderRadius: 4,
-    position: 'absolute',
-    marginLeft: 8,
-  },
-  line: {
-    width: 2,
-    backgroundColor: '#4CAF50',
-    position: 'absolute',
-    bottom: 0,
-  },
-  lineConnector: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-  },
-  categoryRow: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  categoryColor: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  categoryText: {
-    fontSize: 16,
-    color: '#333',
-    flex: 1,
-  },
-  categoryAmount: {
-    fontSize: 16,
-    color: '#333',
-  },
-  transactionRow: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  transactionName: {
-    fontSize: 16,
-    color: '#333',
-    flex: 1,
-  },
-  transactionAmount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    flex: 1,
-  },
-  transactionDate: {
-    fontSize: 14,
-    color: '#777',
-    flex: 1,
+  graph: {
+    marginTop: 10,
   },
 });
 
-export default TrackFinance;
+export default App;

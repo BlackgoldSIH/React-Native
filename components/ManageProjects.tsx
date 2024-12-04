@@ -17,7 +17,7 @@ const projects = [
     description:
       'Aiming to land humans on Mars by 2040. Focused on space exploration.',
     status: 'In Progress',
-    image: 'https://via.placeholder.com/150',
+    image: '../assets/images/icon.png',
   },
   {
     id: 2,
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9f9f9',
     padding: 15,
+    margin:9
   },
   header: {
     fontSize: 24,
