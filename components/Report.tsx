@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
-  Picker,
+Picker , 
   Dimensions, // Dropdown-like component
 } from "react-native";
+
 
 const App = () => {
 

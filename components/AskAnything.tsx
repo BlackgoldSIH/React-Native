@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons'; // For icon usage
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 const questions = [
-  { id: 1, question: 'How to upload a file through the panel ?' },
+  { id: 1, question: 'How to upload a file through the panel?' },
   { id: 2, question: 'Process for audit.' },
-  { id: 3, question: 'How to find out current expenses with all details ?' },
+  { id: 3, question: 'How to find out current expenses with all details?' },
   { id: 4, question: 'Final review checklist' },
 ];
 
 const AskAnything = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
 
-  const handleQuestionSelect = (question) => {
+  const handleQuestionSelect = (question:any) => {
     setSelectedQuestion(question);
   };
 
@@ -27,7 +29,7 @@ const AskAnything = () => {
       </View>
 
       {/* Question Cards */}
-      <ScrollView horizontal style={styles.cards}>
+      <ScrollView horizontal style={styles.cards} showsHorizontalScrollIndicator={false}>
         {questions.map((item) => (
           <TouchableOpacity
             key={item.id}
@@ -45,15 +47,14 @@ const AskAnything = () => {
         <View style={styles.chatResponse}>
           <View style={styles.question}>
             <View style={styles.bubble}>
-              <Text style={styles.bubbleText}>a</Text>
+              <Text style={styles.bubbleText}>Q</Text>
             </View>
             <Text style={styles.questionText}>{selectedQuestion}</Text>
           </View>
           <View style={styles.answer}>
             <FontAwesome5 name="star" size={20} color="#7b4bff" style={styles.starIcon} />
             <Text style={styles.answerText}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam,
               quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </Text>
           </View>
@@ -80,29 +81,30 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   headerTitle: {
-    fontSize: 36,
+    fontSize: 28,
     color: '#7b4bff',
+    textAlign: 'center',
   },
   headerHighlight: {
     color: '#4c52ff',
   },
   headerSubtitle: {
-    fontSize: 20,
+    fontSize: 16,
     color: '#9b9b9b',
+    textAlign: 'center',
   },
   cards: {
     flexDirection: 'row',
-    marginBottom: 30,
-    width:"100%" , 
+    marginBottom: 20,
   },
   card: {
     backgroundColor: '#f8f8ff',
     padding: 15,
     borderRadius: 10,
-    width: 400,
+    width: screenWidth * 0.8, // 80% of screen width
     marginRight: 15,
     justifyContent: 'center',
     alignItems: 'center',
@@ -110,12 +112,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 2,
-    textAlign: 'center',
   },
   cardText: {
     fontSize: 14,
     color: '#555',
     marginBottom: 10,
+    textAlign: 'center',
   },
   cardIcon: {
     marginTop: 10,
@@ -124,7 +126,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   question: {
     flexDirection: 'row',
@@ -145,12 +150,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   questionText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
+    flexShrink: 1,
   },
   answer: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 10,
   },
   starIcon: {
     marginRight: 10,
@@ -161,7 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   typingBox: {
-    marginTop: 30,
+    marginTop: 20,
     alignItems: 'center',
   },
   inputBox: {

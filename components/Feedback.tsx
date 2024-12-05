@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity , ScrollView } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import SubmitRevision from './FeedbackUpload';
- 
 
 const AdminComments = () => {
-  // Dummy data with selection state
   const [data, setData] = useState(
     Array(4)
       .fill(null)
@@ -27,75 +25,75 @@ const AdminComments = () => {
   };
 
   const renderItem = ({ item }) => (
-
     <View style={styles.card}>
-      {/* Checkbox */}
-      <TouchableOpacity
-        style={styles.checkboxContainer}
-        onPress={() => toggleCheckbox(item.id)}
-      >
-        <View style={[styles.checkbox, item.isSelected && styles.checkboxSelected]}>
-          {item.isSelected && <Text style={styles.tickMark}>✓</Text>}
-        </View>
-      </TouchableOpacity>
-
-      {/* Main Content */}
-      <View style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => toggleCheckbox(item.id)}
+        >
+          <View style={[styles.checkbox, item.isSelected && styles.checkboxSelected]}>
+            {item.isSelected && <Text style={styles.tickMark}>✓</Text>}
+          </View>
+        </TouchableOpacity>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.subText}>
-          <Text style={styles.link}>#{item.id}</Text> Opened {item.openedDays} by Admin
-        </Text>
-        <View style={styles.infoRow}>
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusCanceled}>Canceled</Text>
-            <Text style={styles.statusCompleted}>Completed</Text>
+      </View>
+      <Text style={styles.subText}>
+        <Text style={styles.link}>#{item.id}</Text> Opened {item.openedDays} by Admin
+      </Text>
+      <View style={styles.infoRow}>
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusCanceled}>Canceled</Text>
+          <Text style={styles.statusCompleted}>Completed</Text>
+        </View>
+        <View style={styles.dateContainer}>
+          <View style={styles.dateItem}>
+            <Text style={styles.dateLabel}>Start Date</Text>
+            <Text style={styles.dateValue}>{item.startDate}</Text>
           </View>
-          <View style={styles.dateContainer}>
-            <View style={styles.dateItem}>
-              <Text style={styles.dateLabel}>Start Date</Text>
-              <Text style={styles.dateValue}>{item.startDate}</Text>
-            </View>
-            <View style={styles.dateItem}>
-              <Text style={styles.dateLabel}>End Date</Text>
-              <Text style={styles.dateValue}>{item.endDate}</Text>
-            </View>
+          <View style={styles.dateItem}>
+            <Text style={styles.dateLabel}>End Date</Text>
+            <Text style={styles.dateValue}>{item.endDate}</Text>
           </View>
-          <View style={styles.durationContainer}>
-            <Text style={styles.durationText}>{item.duration}</Text>
-          </View>
+        </View>
+        <View style={styles.durationContainer}>
+          <Text style={styles.durationText}>{item.duration}</Text>
         </View>
       </View>
     </View>
   );
 
   return (
-    <ScrollView>
-    <View style={styles.container}>
-      <View><Text style={{marginTop:5 , marginBottom:5  , fontWeight:"400" , fontSize:15 , marginRight:3}}>Admin Comments {'>'}</Text></View>
+    <ScrollView style={styles.container}>
+      <Text style={styles.headerText}>Admin Comments {'>'}</Text>
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        contentContainerStyle={styles.list}
       />
-     
-    </View>
-    <View>
-      <SubmitRevision />
-    </View>
+      <View style={styles.submitContainer}>
+        <SubmitRevision />
+      </View>
     </ScrollView>
-    
-    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: '#f9f9f9',
-    padding: 16,
+    paddingHorizontal: 16,
+  },
+  headerText: {
+    marginVertical: 10,
+    fontWeight: '500',
+    fontSize: 16,
+    color: '#333',
+  },
+  list: {
+    paddingBottom: 16,
   },
   card: {
-    flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
@@ -105,6 +103,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   checkboxContainer: {
     marginRight: 12,
@@ -130,32 +133,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
+    flex: 1,
   },
   subText: {
-    marginTop: 4,
-    fontSize: 14,
+    fontSize: 13,
     color: '#666',
+    marginVertical: 4,
   },
   link: {
     color: '#007bff',
   },
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
+    marginTop: 8,
   },
   statusContainer: {
-    flex: 1,
     flexDirection: 'row',
+    marginBottom: 8,
   },
   statusCanceled: {
     backgroundColor: '#f8d7da',
     color: '#721c24',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    padding: 6,
     borderRadius: 4,
     fontSize: 12,
     marginRight: 8,
@@ -163,36 +164,38 @@ const styles = StyleSheet.create({
   statusCompleted: {
     backgroundColor: '#d4edda',
     color: '#155724',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    padding: 6,
     borderRadius: 4,
     fontSize: 12,
   },
   dateContainer: {
-    flex: 2,
-    flexDirection:"row", 
-    gap:10 , 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
   dateItem: {
-    marginBottom: 4,
+    flex: 1,
+    marginRight: 8,
   },
   dateLabel: {
     fontSize: 12,
     color: '#666',
   },
   dateValue: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
     color: '#333',
   },
   durationContainer: {
-    flex: 1,
     alignItems: 'flex-end',
   },
   durationText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#28a745',
+  },
+  submitContainer: {
+    marginTop: 16,
   },
 });
 

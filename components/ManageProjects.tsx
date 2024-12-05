@@ -9,6 +9,9 @@ import {
   Dimensions,
 } from 'react-native';
 
+// Get device width and height
+const { width, height } = Dimensions.get('window');
+
 // Dummy project data
 const projects = [
   {
@@ -47,7 +50,7 @@ const projects = [
 
 const ManageProjects = () => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Text style={styles.header}>Manage Projects</Text>
 
       {projects.map((project) => (
@@ -70,7 +73,7 @@ const ManageProjects = () => {
 };
 
 // Helper function to determine the status style
-const getStatusStyle = (status: string) => {
+const getStatusStyle = (status:any) => {
   switch (status) {
     case 'In Progress':
       return styles.inProgress;
@@ -84,18 +87,18 @@ const getStatusStyle = (status: string) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'stretch', // Ensure items stretch across the full width
     backgroundColor: '#f9f9f9',
-    padding: 15,
-    margin:9
   },
   header: {
-    fontSize: 24,
+    fontSize: width * 0.06,
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
-    marginBottom: 20,
+    marginVertical: height * 0.02,
   },
   projectCard: {
     backgroundColor: '#fff',
@@ -104,32 +107,33 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    marginBottom: 20,
+    marginHorizontal: width * 0.02, // Small horizontal margin for aesthetics
+    marginBottom: height * 0.02 , 
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    padding: width * 0.04,
   },
   projectImage: {
-    width: 80,
-    height: 80,
+    width: width * 0.2,
+    height: width * 0.2,
     borderRadius: 8,
-    marginRight: 15,
+    marginRight: width * 0.04,
   },
   projectDetails: {
     flex: 1,
   },
   projectName: {
-    fontSize: 18,
+    fontSize: width * 0.05,
     fontWeight: 'bold',
     color: '#333',
   },
   projectDescription: {
-    fontSize: 14,
+    fontSize: width * 0.04,
     color: '#555',
-    marginVertical: 5,
+    marginVertical: height * 0.005,
   },
   projectStatus: {
-    fontSize: 14,
+    fontSize: width * 0.04,
     fontWeight: 'bold',
   },
   inProgress: {
@@ -143,13 +147,14 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: '#2196F3',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: height * 0.01,
+    paddingHorizontal: width * 0.03,
     borderRadius: 4,
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: width * 0.04,
   },
 });
 

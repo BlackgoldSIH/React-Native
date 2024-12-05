@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     marginBottom: 20,
-    width:"60%" , 
+    width:"50%" , 
   },
   barHeader: {
     flexDirection: 'row',

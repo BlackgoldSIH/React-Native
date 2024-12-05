@@ -252,7 +252,7 @@
 // });
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import {
   View,
@@ -288,11 +288,23 @@ import Login from '@/components/Login';
 const { width } = Dimensions.get('window');
 
 const App = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(width > 768);
   const drawerAnimation = useRef(new Animated.Value(-width * 0.8)).current;
 
   // Current Page State
   const [currentPage, setCurrentPage] = useState('login'); // Default Page
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(Dimensions.get('window').width > 768);
+    };
+    Dimensions.addEventListener('change', handleResize);
+
+    return () => {
+      Dimensions.removeEventListener('change', handleResize);
+    };
+  }, []);
 
   const toggleDrawer = () => {
     
@@ -312,12 +324,12 @@ const App = () => {
     }
   };
 
-  const navigateToPage = (page) => {
+  const navigateToPage = (page:any) => {
     setCurrentPage(page);
     toggleDrawer(); // Close the drawer after navigation
   };
 
-  const navigatToPage = (page) => {
+  const navigatToPage = (page:any) => {
     setCurrentPage(page);
    // toggleDrawer(); // Close the drawer after navigation
   };
@@ -485,7 +497,7 @@ const App = () => {
   );
 };
 
-const SidebarItem = ({ icon, title, onPress }) => (
+const SidebarItem = ({ icon, title, onPress }:any) => (
   <TouchableOpacity style={styles.drawerItem} onPress={onPress}>
     <MaterialIcons name={icon} size={24} color="#fff" style={styles.drawerItemIcon} />
     <Text style={styles.drawerItemText}>{title}</Text>
@@ -528,10 +540,11 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop:10 , 
     backgroundColor: '#f7f7f7',
   },
   logo: {
-    width: "14%",
+    width: "35%",
     height: "7%",
   },
   overlay: {
@@ -578,7 +591,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
   },
   menuButton: {
     padding: 10,
@@ -620,7 +633,7 @@ const styles = StyleSheet.create({
       profileName: {
         fontSize: 14,
         color:"black" , 
-        marginRight: 5,
+        right:15 , 
       },
       cardsContainer: {
              padding: 10,

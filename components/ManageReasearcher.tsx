@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 
 const UserForm = () => {
   const [fullName, setFullName] = useState("");
@@ -10,137 +19,150 @@ const UserForm = () => {
   const [createdBy, setCreatedBy] = useState("");
 
   return (
-    <View style={styles.container}>
-        <View><Text style={{fontWeight:"400" , fontSize:15 , marginBottom:15 , marginRight:3 }}>Add Researcher {'>'}</Text></View>
-      {/* Row 1 */}
-      <View style={{backgroundColor:"#fff" , height:350 , padding:10}}>
-      <View style={styles.row}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter Full Name</Text>
-          <TextInput
-            style={styles.input}
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Full Name"
-            placeholderTextColor="#aaa"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            placeholderTextColor="#aaa"
-            keyboardType="email-address"
-          />
-        </View>
-      </View>
-
-      {/* Row 2 */}
-      <View style={styles.row}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Mobile</Text>
-          <TextInput
-            style={styles.input}
-            value={mobile}
-            onChangeText={setMobile}
-            placeholder="Mobile"
-            placeholderTextColor="#aaa"
-            keyboardType="phone-pad"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Created Date</Text>
-          <View style={styles.inputWithIcon}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.headerText}>Add Researcher {'>'}</Text>
+      <View style={styles.formContainer}>
+        {/* Row 1 */}
+        <View style={styles.row}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter Full Name</Text>
             <TextInput
-              style={[styles.input, { flex: 1 }]}
-              value={createdDate}
-              onChangeText={setCreatedDate}
-              placeholder="Date"
+              style={styles.input}
+              value={fullName}
+              onChangeText={setFullName}
+              placeholder="Full Name"
               placeholderTextColor="#aaa"
             />
-            <Text style={styles.icon}>📅</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Email"
+              placeholderTextColor="#aaa"
+              keyboardType="email-address"
+            />
           </View>
         </View>
-      </View>
 
-      {/* Row 3 */}
-      <View style={styles.row}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Department</Text>
-          <TextInput
-            style={styles.input}
-            value={department}
-            onChangeText={setDepartment}
-            placeholder="Department Name"
-            placeholderTextColor="#aaa"
-          />
+        {/* Row 2 */}
+        <View style={styles.row}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Mobile</Text>
+            <TextInput
+              style={styles.input}
+              value={mobile}
+              onChangeText={setMobile}
+              placeholder="Mobile"
+              placeholderTextColor="#aaa"
+              keyboardType="phone-pad"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Created Date</Text>
+            <View style={styles.inputWithIcon}>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                value={createdDate}
+                onChangeText={setCreatedDate}
+                placeholder="Date"
+                placeholderTextColor="#aaa"
+              />
+              <Text style={styles.icon}>📅</Text>
+            </View>
+          </View>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Created By</Text>
-          <TextInput
-            style={styles.input}
-            value={createdBy}
-            onChangeText={setCreatedBy}
-            placeholder="Admin Name"
-            placeholderTextColor="#aaa"
-          />
+
+        {/* Row 3 */}
+        <View style={styles.row}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Department</Text>
+            <TextInput
+              style={styles.input}
+              value={department}
+              onChangeText={setDepartment}
+              placeholder="Department Name"
+              placeholderTextColor="#aaa"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Created By</Text>
+            <TextInput
+              style={styles.input}
+              value={createdBy}
+              onChangeText={setCreatedBy}
+              placeholder="Admin Name"
+              placeholderTextColor="#aaa"
+            />
+          </View>
         </View>
+
+        {/* Submit Button */}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Add the Research</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Submit Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Add the Research</Text>
-      </TouchableOpacity>
-      </View>
-
-      
-      <View><Text style={{fontWeight:"400" , fontSize:15 , marginBottom:15 , marginRight:3 , marginTop:9}}>Researchers {'>'}</Text></View>
+      {/* Researcher Card */}
+      <Text style={styles.headerText}>Researchers {'>'}</Text>
       <View style={styles.card}>
-      {/* Profile Image */}
-      <Image
-        source={require("./download.jpg")} 
-        style={styles.profileImage}
-      />
-
-      {/* User Details */}
-      <View style={styles.detailsContainer}>
-        <Text style={styles.name}>Naman Arora</Text>
-        <Text style={styles.department}>Department Name</Text>
+        <Image
+          source={require("./download.jpg")} // Update with actual image path
+          style={styles.profileImage}
+        />
+        <View style={styles.detailsContainer}>
+          <Text style={styles.name}>Naman Arora</Text>
+          <Text style={styles.department}>Department Name</Text>
+        </View>
+        <View style={styles.metaContainer}>
+          <Text style={styles.metaText}>20/04/2023</Text>
+          <Text style={styles.metaText}>
+            <Text style={styles.label}>Admin:</Text> Admin Name
+          </Text>
+          <Text style={styles.metaText}>
+            <Text style={styles.label}>Approval Status:</Text>{" "}
+            <Text style={styles.status}>Pending</Text>
+          </Text>
+        </View>
       </View>
-
-      {/* Metadata */}
-      <View style={styles.metaContainer}>
-        <Text style={styles.metaText}>20/04/2023</Text>
-        <Text style={styles.metaText}>
-          <Text style={styles.label}>Admin:</Text> Admin Name
-        </Text>
-        <Text style={styles.metaText}>
-          <Text style={styles.label}>Approval Status:</Text>{" "}
-          <Text style={styles.status}>Pending</Text>
-        </Text>
-      </View>
-    </View>
-    </View>
+    </ScrollView>
   );
 };
 
+const { width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     backgroundColor: "rgba(247, 247, 247, 1.00)",
   },
+  headerText: {
+    fontWeight: "400",
+    fontSize: 15,
+    marginBottom: 15,
+  },
+  formContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
   row: {
-    flexDirection: "row",
+    flexDirection: width > 768 ? "row" : "column",
     justifyContent: "space-between",
     marginBottom: 20,
   },
   inputContainer: {
     flex: 1,
-    marginHorizontal: 5,
+    marginHorizontal: width > 768 ? 5 : 0,
+    marginBottom: width > 768 ? 0 : 15,
   },
   label: {
     fontSize: 14,
@@ -173,11 +195,9 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "black",
-    width:"25%" , 
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
-    marginTop: 20,
   },
   buttonText: {
     fontSize: 16,
@@ -191,12 +211,10 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 5,
-    marginHorizontal: 10,
-    marginVertical: 15,
+    marginBottom: 20,
   },
   profileImage: {
     width: 50,
@@ -228,7 +246,6 @@ const styles = StyleSheet.create({
     color: "orange",
     fontWeight: "600",
   },
-
 });
 
 export default UserForm;
