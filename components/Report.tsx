@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
-Picker , 
+
   Dimensions, // Dropdown-like component
 } from "react-native";
-
+import { Picker } from "@react-native-picker/picker"
 
 const App = () => {
 
@@ -174,7 +174,7 @@ const App = () => {
               data={forms}
               keyExtractor={(item) => item.id}
               renderItem={renderIte}
-              numColumns={2} // Creates a grid with 2 columns
+              // numColumns={2} // Creates a grid with 2 columns
               contentContainerStyle={styles.grid}
             />
           </View>
@@ -207,7 +207,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginLeft:15 , 
+    marginLeft:5 , 
     backgroundColor: "#ffffff",
   },
   title: {
@@ -224,7 +224,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   grid: {
-    justifyContent: "space-between",
+    justifyContent: "center",
+    width:"100%" , 
   },
   card: {
     flex: 1,
@@ -237,18 +238,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
+    width:"100%" , 
     maxWidth: Dimensions.get("window").width / 2 - 24, // Ensures two columns
   },
   fileList: {
     flex: 3,
-    paddingHorizontal: 16,
+    paddingHorizontal: -3,
   },
   fileRow: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#ffffff",
     marginBottom: 8,
-    padding: 16,
+    padding: 10,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -384,17 +386,20 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    height: 35,
+    height: 50,
     borderRadius:9 , 
-    width: "25%",
+    width: "75%",
+    marginLeft:5 , 
     borderColor: "#007AFF",
     borderWidth: 1,
     backgroundColor: "#F9F9F9",
     marginVertical: 10,
+
   },
   pageContent: {
     flex: 1,
     padding: 15,
+
   },
   pageContainer: {
     flex: 1,
@@ -414,16 +419,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  fileName: {
-    fontSize: 14,
-    color: "#4B4B4B",
-    marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#E5E5E5",
-    borderRadius: 6,
-    width: "100%",
-  },
+ 
   reportItem: {
     padding: 15,
     backgroundColor: "#E8E8E8",

@@ -1,5 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from "react-native";
+
+// Get the screen width for responsive adjustments
+const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 const App = () => {
   return (
@@ -84,9 +88,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
+    padding: 10,
     backgroundColor: "#F9FAFB", // Light background
   },
   cardContainer: {
@@ -96,9 +98,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   card: {
-    width: "30%", // 30% width to fit 3 cards per row
+    width: width * 0.90, // Card width is 28% of the screen width, allowing 3 cards per row
     aspectRatio: 1, // Ensures card is square
-    borderWidth: 2,
+    borderWidth: 2,  
     borderRadius: 15,
     paddingVertical: 20,
     paddingHorizontal: 10,
@@ -126,13 +128,13 @@ const styles = StyleSheet.create({
     resizeMode: "contain", // Adjusts image proportionally
   },
   title: {
-    fontSize: 18,
+    fontSize: 16, // Slightly smaller title for mobile screens
     fontWeight: "600",
     color: "#1F2937",
     marginTop: 5,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 12, // Smaller subtitle for mobile screens
     color: "#6B7280",
     marginTop: 2,
     textAlign: "center", // Centered subtitle

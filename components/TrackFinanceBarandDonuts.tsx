@@ -1,15 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Rect, Text as SvgText, Circle } from 'react-native-svg';
 
 const TrackFinanceCharts = () => {
+  const screenWidth = Dimensions.get('window').width;
+  const isSmallScreen = screenWidth < 600; // Define small screen as width < 600px
+
   // Bar Chart Component
   const BarChart = () => {
     const data = [10, 30, 20, 25, 50, 15, 60, 40, 35, 30, 45, 40];
     const maxValue = 60; // Adjust the max value for the chart scaling
 
     return (
-      <View style={styles.barChartContainer}>
+      <View style={[styles.barChartContainer, isSmallScreen && styles.fullWidth]}>
         <View style={styles.barHeader}>
           <Text style={styles.barTitle}>Work Done</Text>
           <View style={styles.dropdown}>
@@ -59,7 +62,7 @@ const TrackFinanceCharts = () => {
     let cumulativeValue = 0;
 
     return (
-      <View style={styles.donutChartContainer}>
+      <View style={[styles.donutChartContainer, isSmallScreen && styles.fullWidth]}>
         <View style={styles.donutHeader}>
           <Text style={styles.donutTitle}>Budget Utilization</Text>
           <View style={styles.dropdown}>
@@ -99,7 +102,7 @@ const TrackFinanceCharts = () => {
 
   // Combined Layout
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isSmallScreen && styles.containerMobile]}>
       <BarChart />
       <DonutChart />
     </View>
@@ -110,12 +113,16 @@ const TrackFinanceCharts = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fff',
-    padding: 20,
-    display:"flex" , 
-    flexDirection:"row" , 
-    gap:40 , 
-    marginTop:3 , 
+    flexDirection: 'row', // Horizontal layout for larger screens
+    gap: 20,
+    marginLeft:5 , 
+    marginRight:5 , 
+    marginTop: 10,
+    justifyContent: 'space-between',
+  },
+  containerMobile: {
+    flexDirection: 'column', // Stack charts vertically on smaller screens
+    alignItems: 'center',
   },
   dropdown: {
     backgroundColor: '#2D2D3C',
@@ -127,13 +134,16 @@ const styles = StyleSheet.create({
     color: '#AAA',
     fontSize: 14,
   },
+  fullWidth: {
+    width: '100%', // Make components take full width on smaller screens
+    marginBottom: 20,
+  },
   // Bar Chart Styles
   barChartContainer: {
     backgroundColor: '#FFF',
     borderRadius: 15,
     padding: 20,
-    marginBottom: 20,
-    width:"50%" , 
+    width: '48%', // Half the width on larger screens
   },
   barHeader: {
     flexDirection: 'row',
@@ -165,6 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2D2D3C',
     borderRadius: 15,
     padding: 20,
+    width: '48%', // Half the width on larger screens
   },
   donutHeader: {
     flexDirection: 'row',
@@ -180,8 +191,7 @@ const styles = StyleSheet.create({
   donutCenter: {
     position: 'absolute',
     top: 110,
-    left: 30,
-    width:"40%" , 
+    left: 45,
     alignItems: 'center',
     justifyContent: 'center',
   },
