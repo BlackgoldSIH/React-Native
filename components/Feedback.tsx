@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import SubmitRevision from './FeedbackUpload';
+import SubmissionHistory from './FeebackLastSection';
 
 const AdminComments = () => {
   const [data, setData] = useState(
@@ -73,6 +74,9 @@ const AdminComments = () => {
       />
       <View style={styles.submitContainer}>
         <SubmitRevision />
+      </View>
+      <View>
+        <SubmissionHistory />
       </View>
     </ScrollView>
   );
