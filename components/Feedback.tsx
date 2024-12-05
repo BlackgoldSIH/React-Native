@@ -18,14 +18,14 @@ const AdminComments = () => {
       }))
   );
 
-  const toggleCheckbox = (id) => {
+  const toggleCheckbox = (id:any) => {
     const updatedData = data.map((item) =>
       item.id === id ? { ...item, isSelected: !item.isSelected } : item
     );
     setData(updatedData);
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }:any) => (
     <View style={styles.card}>
       <View style={styles.header}>
         <TouchableOpacity

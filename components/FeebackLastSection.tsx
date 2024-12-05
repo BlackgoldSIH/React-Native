@@ -23,14 +23,14 @@ const SubmissionHistory = () => {
   ];
 
   // Toggle the checkbox
-  const handleCheck = (id) => {
+  const handleCheck = (id:any) => {
     setCheckedItems((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
   };
 
-  const renderStatus = (status) => {
+  const renderStatus = (status:any) => {
     let statusStyle;
     switch (status) {
       case "Reviewed":
@@ -48,7 +48,7 @@ const SubmissionHistory = () => {
     return <Text style={[styles.statusText, statusStyle]}>{status}</Text>;
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }:any) => (
     <View style={styles.row}>
       <Text style={styles.titleText}>{item.title}</Text>
       {renderStatus(item.status)}

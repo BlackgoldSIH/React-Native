@@ -1,112 +1,85 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, useWindowDimensions } from "react-native";
+import TotalWorkLog from "./WorkflowDate";
+import TaskProgressChart from "./Tasks";
 
-const App = () => {
-  const projects = [
-    { id: '1', title: 'Project Title 1', description: 'Detailed project overview goes here.' },
-    { id: '2', title: 'Project Title 2', description: 'Detailed project overview goes here.' },
-    { id: '3', title: 'Project Title 3', description: 'Detailed project overview goes here.' },
-  ];
+const ProjectCard = ({ title, id, description, imageSrc, checked, onToggle }:any) => (
+  <View style={styles.card}>
+    <TouchableOpacity onPress={onToggle} style={styles.checkboxContainer}>
+      <View style={[styles.checkbox, checked && styles.checked]}>
+        {checked && <Text style={styles.tick}>✔</Text>}
+      </View>
+    </TouchableOpacity>
+    <Image source={{ uri: imageSrc }} style={styles.image} />
+    <Text style={styles.projectTitle}>{title}</Text>
+    <Text style={styles.projectId}>#{id}</Text>
+    <Text style={styles.description}>{description}</Text>
+    <TouchableOpacity style={styles.button}>
+      <Text style={styles.buttonText}>View Tasks</Text>
+    </TouchableOpacity>
+  </View>
+);
 
-  const tasks = [
-    { id: '1', title: 'Task 1', status: 'Pending', color: '#FF6B6B' },
-    { id: '2', title: 'Task 2', status: 'Reviewing', color: '#4D96FF' },
-    { id: '3', title: 'Task 3', status: 'In Queue', color: '#FFC107' },
-  ];
+const ProjectList = () => {
+  const [projects, setProjects] = useState([
+    {
+      title: "Project Title 1",
+      id: "402235",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageSrc: "https://via.placeholder.com/150",
+      checked: false,
+    },
+    {
+      title: "Project Title 2",
+      id: "402236",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageSrc: "https://via.placeholder.com/150",
+      checked: true,
+    },
+    {
+      title: "Project Title 3",
+      id: "402237",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageSrc: "https://via.placeholder.com/150",
+      checked: false,
+    },
+    {
+      title: "Project Title 4",
+      id: "402238",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      imageSrc: "https://via.placeholder.com/150",
+      checked: false,
+    },
+  ]);
 
-  const budgetData = [
-    { category: 'Design', allocated: 2000, spent: 1800 },
-    { category: 'Development', allocated: 5000, spent: 4200 },
-    { category: 'Marketing', allocated: 1500, spent: 1200 },
-  ];
+  const toggleCheckbox = (index:any) => {
+    setProjects((prevProjects) =>
+      prevProjects.map((project, i) =>
+        i === index ? { ...project, checked: !project.checked } : project
+      )
+    );
+  };
 
-  const calendarData = [
-    { date: '1 Dec', task: 'Meeting' },
-    { date: '3 Dec', task: 'Deadline for project submission' },
-    { date: '5 Dec', task: 'Review tasks' },
-  ];
+  const { width } = useWindowDimensions();
+  const isMobile = width < 480;
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Dashboard</Text>
-        <Text style={styles.headerSubtitle}>Manage your projects and tasks efficiently</Text>
-      </View>
-
-      {/* Projects Section */}
-      <Text style={styles.sectionTitle}>Projects</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.projectsContainer}>
-        {projects.map((project) => (
-          <View key={project.id} style={styles.projectCard}>
-            <Text style={styles.projectTitle}>{project.title}</Text>
-            <Text style={styles.projectDescription}>{project.description}</Text>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>View Tasks</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-
-      {/* Tasks Section */}
-      <Text style={styles.sectionTitle}>Project Tasks</Text>
-      {tasks.map((task) => (
-        <View key={task.id} style={styles.taskCard}>
-          <Text style={styles.taskTitle}>{task.title}</Text>
-          <View style={[styles.status, { backgroundColor: task.color }]}>
-            <Text style={styles.statusText}>{task.status}</Text>
-          </View>
-        </View>
-      ))}
-
-      {/* Worklog & Calendar Section */}
-      <View style={styles.infoRow}>
-        <View style={styles.infoCard}>
-          <Text style={styles.infoCardTitle}>Total WorkLog</Text>
-          <View style={styles.circularPlaceholder}>
-            <Text >5w: 2d</Text>
-          </View>
-        </View>
-        <View style={styles.infoCard}>
-          <Text style={styles.infoCardTitle}>Calendar</Text>
-          <FlatList
-            data={calendarData}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.calendarItem}>
-                <Text style={styles.calendarDate}>{item.date}</Text>
-                <Text style={styles.calendarTask}>{item.task}</Text>
-              </View>
-            )}
+      <View style={[styles.grid, isMobile && styles.mobileGrid]}>
+        {projects.map((item, index) => (
+          <ProjectCard
+            key={index}
+            title={item.title}
+            id={item.id}
+            description={item.description}
+            imageSrc={item.imageSrc}
+            checked={item.checked}
+            onToggle={() => toggleCheckbox(index)}
           />
-        </View>
+        ))}
       </View>
-
-      {/* Budget Utilization & Graphs */}
-      <Text style={styles.sectionTitle}>Budget Utilization</Text>
-      {budgetData.map((budget, index) => (
-        <View key={index} style={styles.budgetRow}>
-          <Text style={styles.budgetCategory}>{budget.category}</Text>
-          <View style={styles.budgetBar}>
-            <View
-              style={{
-                width: `${(budget.spent / budget.allocated) * 100}%` , 
-                backgroundColor: '#4CAF50',
-                height: '100%',
-              }}
-            />
-          </View>
-          <Text style={styles.budgetText}>
-            ${budget.spent}/${budget.allocated}
-          </Text>
-        </View>
-      ))}
-
-      {/* Expected Timeline Graph */}
-      <Text style={styles.sectionTitle}>Expected Timeline</Text>
-      <View style={styles.rectangularPlaceholder}>
-        <Text>Timeline Graph Placeholder</Text>
-      </View>
+      <TotalWorkLog />
+      <TaskProgressChart />
     </ScrollView>
   );
 };
@@ -114,154 +87,88 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f4f6f8',
-    padding: 16,
+    padding: 10,
+    backgroundColor: "#f7f7f7",
   },
-  header: {
-    marginBottom: 16,
-    alignItems: 'center',
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+  mobileGrid: {
+    flexDirection: "column",
+    alignItems: "center",
   },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 20,
+    width: "100%",
+    marginRight: "2%",
+    marginLeft: "0%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 3,
+    position: "relative",
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginVertical: 12,
+  checkboxContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
-  projectsContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "#333",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    transition: "background-color 0.2s ease",
   },
-  projectCard: {
-    width: 220,
-    marginRight: 16,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    elevation: 4,
+  checked: {
+    backgroundColor: "#333",
+  },
+  tick: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  image: {
+    width: "90%",
+    height: 150,
+    borderRadius: 8,
   },
   projectTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
+    fontWeight: "bold",
+    marginTop: 10,
+    color: "#333",
   },
-  projectDescription: {
+  projectId: {
     fontSize: 14,
-    color: '#777',
-    marginBottom: 8,
+    color: "#666",
+  },
+  description: {
+    fontSize: 12,
+    color: "#777",
+    marginVertical: 10,
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: "#000",
     paddingVertical: 8,
-    borderRadius: 8,
-    alignItems: 'center',
+    borderRadius: 10,
+    marginTop: 10,
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  taskCard: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    elevation: 2,
-  },
-  taskTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  status: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-  },
-  statusText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  infoCard: {
-    width: '48%',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    elevation: 2,
-  },
-  infoCardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
-  },
-  circularPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  budgetRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  budgetCategory: {
-    width: '25%',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  budgetBar: {
-    flex: 1,
-    height: 10,
-    backgroundColor: '#ccc',
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  budgetText: {
-    width: '25%',
-    textAlign: 'right',
-    fontSize: 14,
-  },
-  calendarItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 4,
-  },
-  calendarDate: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  calendarTask: {
-    fontSize: 14,
-    color: '#666',
-  },
-  rectangularPlaceholder: {
-    height: 100,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    marginVertical: 12,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
-export default App;
+export default ProjectList;
