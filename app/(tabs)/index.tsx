@@ -284,6 +284,7 @@ import ProjectCard from '@/components/ProjectCard';
 import ProjectCards from '@/components/ProjectCard';
 import Tools from '@/components/Tools';
 import Login from '@/components/Login';
+import ProjectInfoForm from '@/components/AddProject';
 
 const { width } = Dimensions.get('window');
 
@@ -363,6 +364,8 @@ const App = () => {
         return <HelpPage />;
         case 'security':
         return <SecurityPage />;
+        case 'Add Projects':
+        return <ProjectInfoForm />;
         case 'settings':
         return <SettingsPage />;
         case 'tools':
@@ -395,6 +398,11 @@ const App = () => {
             icon="dashboard"
             title="Manage Projects"
             onPress={() => navigateToPage('Manage Projects')}
+          />
+          <SidebarItem
+            icon="add"
+            title="Add Projects"
+            onPress={() => navigateToPage('Add Projects')}
           />
           <SidebarItem
             icon="chat"
